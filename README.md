@@ -39,7 +39,7 @@ Creating new personal-access-token for registered employee if input data are val
 ATTENTION: you should save the generated token for later validation of your requests.
 
 3. POST api/transactions/new
-Employee_id and working hours are required. You also must send a personal-access-token to this endpoint. Send it as a Header Authorization: Bearer <Your token>.
+Employee_id and working hours are required. You also must send a personal-access-token to this endpoint. Send it as a Header Authorization: Bearer [your token].
 Desc:
 Creating new working transaction if input data and personal-access-token are valid. Else show validation|authentication errors.
 
