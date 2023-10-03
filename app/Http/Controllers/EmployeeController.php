@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class EmployeeController extends Controller
 {
@@ -28,7 +31,32 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:employees',
+            'password' => 'required|min:3'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'Status:' => "Fail",
+                'Info:' => "{$validator->errors()}"
+            ]);
+        }
+
+        $validatedData = $validator->validated();
+        $email = $validatedData['email'];
+        $password = $validatedData['password'];
+        $validatedData['password'] = Hash::make($validatedData['password']);
+        $employee = new Employee();
+        $employee->fill($validatedData);
+        $employee->employee_hour_rate = 200;
+        $employee->save();
+
+
+        return response()->json([
+            'Status:' => 'Success!',
+            'Message' => "Your id is {$employee->id}"
+        ]);
     }
 
     /**

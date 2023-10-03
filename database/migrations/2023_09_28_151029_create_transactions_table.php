@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('employee_id')->constraind('employees');
-            $table->smallinteger('minutes');
-            $table->date('transaction_date');
+            $table->foreignId('employee_id')->constraind('employees')->on('id');
+            $table->float('hours', 3, 2);
+            $table->boolean('is_payed')->default(false);
+            $table->timestamp('transaction_date')->nullable();
             $table->timestamps();
         });
     }
