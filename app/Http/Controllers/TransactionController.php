@@ -19,27 +19,16 @@ class TransactionController extends Controller
     {
         $result = [];
         $employeesInfo = DB::table('transactions')
-                            //->whereColumn('is_payed', false);/*
                             ->join('employees', 'transactions.employee_id', '=', 'employees.id')
                             ->select('employee_id', 'employee_hour_rate', DB::raw('sum(hours) as total_hours'), 'is_payed')
                             ->groupBy('employee_id', 'employee_hour_rate', 'is_payed')
                             ->orderBy('employee_id')
                             ->get();
 
-
             foreach ($employeesInfo as $employeeInfo) {
-                !$employeeInfo->is_payed ? $result[] = [(int) $employeeInfo->employee_id => (float) $employeeInfo->total_hours * (float) $employeeInfo->employee_hour_rate] : null;
+                !$employeeInfo->is_payed ? $result[] = [(int) $employeeInfo->employee_id => round($employeeInfo->total_hours * $employeeInfo->employee_hour_rate, 2)] : null;
             }
         
-
-        /*foreach ($employees as $employee) {
-            // не нравится делать так много запросов к бд.
-            $employeeWorkedHours = Transaction::all()->where('employee_id', $employee->id)->sum('hours');
-            //$employeeWorkedHours
-            if ($employeeWorkedHours > 0) {
-            $result[$employee->id] = $employeeWorkedHours;
-            }
-        }*/
         return response()->json($result);
     }
 
@@ -58,7 +47,7 @@ class TransactionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'employee_id' => 'required|integer',
-            'hours' => 'required|numeric|max:24|min:0.5',
+            'hours' => 'required|numeric|max:24|min:0.5|decimal:0,2',
             'transaction_date' => 'nullable|date' // нужно для тестов
         ]);
 

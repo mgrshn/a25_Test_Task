@@ -23,6 +23,7 @@ Install composer->
 Clone repository->
 U need to configure .env file (connect ur db)->
 Make migrations with command: php artisan migrate->
+Start server with command: php artisan serve->
 Use ready to use it.
 
 
